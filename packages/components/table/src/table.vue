@@ -15,6 +15,7 @@
         'el-table--enable-row-transition':
           (store.states.data.value || []).length !== 0 &&
           (store.states.data.value || []).length < 100,
+        'el-table--footer': showSummary,
       },
       tableSize ? `el-table--${tableSize}` : '',
       className,
@@ -43,42 +44,39 @@
         />
       </div>
       <div ref="bodyWrapper" :style="bodyHeight" class="el-table__body-wrapper">
-        <table-body
-          :context="context"
-          :highlight="highlightCurrentRow"
-          :row-class-name="rowClassName"
-          :tooltip-effect="tooltipEffect"
-          :row-style="rowStyle"
-          :store="store"
-          :stripe="stripe"
-          :style="{
-            width: bodyWidth,
-          }"
-        />
-        <div
-          v-if="isEmpty"
-          ref="emptyBlock"
-          :style="emptyBlockStyle"
-          class="el-table__empty-block"
-        >
-          <span class="el-table__empty-text">
-            <slot name="empty">{{ computedEmptyText }}</slot>
-          </span>
-        </div>
-        <div
-          v-if="$slots.append"
-          ref="appendWrapper"
-          class="el-table__append-wrapper"
-        >
-          <slot name="append"></slot>
-        </div>
+        <el-scrollbar :height="height">
+          <table-body
+            :context="context"
+            :highlight="highlightCurrentRow"
+            :row-class-name="rowClassName"
+            :tooltip-effect="tooltipEffect"
+            :row-style="rowStyle"
+            :store="store"
+            :stripe="stripe"
+            :style="{
+              width: bodyWidth,
+            }"
+          />
+          <div
+            v-if="isEmpty"
+            ref="emptyBlock"
+            :style="emptyBlockStyle"
+            class="el-table__empty-block"
+          >
+            <span class="el-table__empty-text">
+              <slot name="empty">{{ computedEmptyText }}</slot>
+            </span>
+          </div>
+          <div
+            v-if="$slots.append"
+            ref="appendWrapper"
+            class="el-table__append-wrapper"
+          >
+            <slot name="append"></slot>
+          </div>
+        </el-scrollbar>
       </div>
       <div v-if="border || isGroup" class="el-table__border-left-patch"></div>
-      <div
-        v-if="layout.scrollX.value && layout.height.value"
-        class="el-table__border-bottom-patch"
-        :style="borderBottomPatchStyles"
-      ></div>
     </div>
     <div
       v-if="showSummary"
@@ -109,6 +107,7 @@ import { defineComponent, getCurrentInstance, computed } from 'vue'
 import debounce from 'lodash/debounce'
 import { Mousewheel } from '@element-plus/directives'
 import { useLocale } from '@element-plus/hooks'
+import ElScrollbar from '@element-plus/components/scrollbar'
 import { createStore } from './store/helper'
 import TableLayout from './table-layout'
 import TableHeader from './table-header'
@@ -130,6 +129,7 @@ export default defineComponent({
     TableHeader,
     TableBody,
     TableFooter,
+    ElScrollbar,
   },
   props: defaultProps,
   emits: [
@@ -190,6 +190,7 @@ export default defineComponent({
       handleHeaderFooterMousewheel,
       tableSize,
       bodyHeight,
+      height,
       emptyBlockStyle,
       handleFixedMousewheel,
       fixedHeight,
@@ -235,6 +236,7 @@ export default defineComponent({
       isGroup,
       bodyWidth,
       bodyHeight,
+      height,
       tableBodyStyles,
       emptyBlockStyle,
       borderBottomPatchStyles,

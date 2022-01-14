@@ -137,7 +137,7 @@ function useRender<T>(props: Partial<TableBodyProps<T>>) {
       ({ type }) => type === 'expand'
     )
     if (hasExpandColumn && isRowExpanded(row)) {
-      const renderExpanded = parent.renderExpanded
+      const renderExpanded = parent?.parent?.renderExpanded
       const tr = rowRender(row, $index, undefined)
       if (!renderExpanded) {
         console.error('[Element Error]renderExpanded is required.')

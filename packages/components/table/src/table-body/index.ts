@@ -22,8 +22,7 @@ export default defineComponent({
   props: defaultProps,
   setup(props) {
     const instance = getCurrentInstance()
-    const parent = instance.parent as Table<DefaultRow>
-
+    const parent = instance.parent?.parent as Table<DefaultRow>
     const { wrappedRowRender, tooltipContent, tooltipTrigger } =
       useRender(props)
     const { onColumnsChange, onScrollableChange } = useLayoutObserver(parent)
